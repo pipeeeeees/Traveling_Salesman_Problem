@@ -75,7 +75,9 @@ class Points:
         for i in range(N):
             ypointz.append(random.randint(-50,50))
         return ypointz
+        
 
+# PLOTTING
 fig = plt.figure()
 ax = fig.add_subplot(111)
 plt.ion()
@@ -84,9 +86,6 @@ fig.canvas.draw()
 
 # Parameters
 N = 50              # controls the number of points generated
-indexsaver = 0
-
-
 
 ############# Point Spread #############
 pointzzz = Points(N)
@@ -98,6 +97,7 @@ alltheypoints = pointzzz.Ypoints()
 
 ############# Nearest Neighbor #############
 # Initializing
+print("Starting the nearest neighbor algorithm...")
 finalX = []
 finalY = []
 alltheXXpoints = copy.copy(allthexpoints)
@@ -117,7 +117,7 @@ for i in range(len(allthexpoints)): #to cover all the points in the array
     alltheXXpoints.pop(indexsaver)
     alltheYYpoints.pop(indexsaver)
     NNplotupdate()
-print(pathlength(finalX,finalY))
+print("NN Produced a path length of {} meters".format(round(pathlength(finalX,finalY),2)))
 
 
 ############# 2-opt #############
@@ -127,6 +127,7 @@ oldX = 0
 oldY = 0
 shrinkingdistance = pathlength(twooptX,twooptY)
 optswaplength = 3
+print("Starting the 2-opt point swap...")
 for i in range(len(twooptX)):
     for rand in reversed(range(0,5)):
         #rand = random.randint(1,3)
@@ -141,7 +142,7 @@ for i in range(len(twooptX)):
         if optdistance < shrinkingdistance:     #keep the swap
             shrinkingdistance = optdistance
             optplotupdate()
-            print(pathlength(twooptX,twooptY))
+            print(round(pathlength(twooptX,twooptY),2))
         else:                                   #undo the swap
             oldX = twooptX[(i+(rand))%len(twooptX)]
             oldY = twooptY[(i+(rand))%len(twooptX)]
@@ -150,8 +151,13 @@ for i in range(len(twooptX)):
             twooptX[i] = oldX
             twooptY[i] = oldY
             #optdistance = 0
-print(pathlength(twooptX,twooptY))
-print( (pathlength(finalX,finalY)/pathlength(twooptX,twooptY)) - 1 )
+initialdistance = round(pathlength(finalX,finalY) ,2)
+print("Our initial distance was {} meters".format(initialdistance))
+finaldistance = round(pathlength(twooptX,twooptY),2)
+print("Our final distance is {} meters".format(finaldistance))
+finalpercent = round(100*( (pathlength(finalX,finalY)/pathlength(twooptX,twooptY)) - 1),2)
+print("Using 2-Opt point swapping, our final distance is {}% shorter".format(finalpercent))
+# PLOTTING
 ax.clear()
 ax.plot(finalX,finalY)
 ax.plot(allthexpoints,alltheypoints,'.')
