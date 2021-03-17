@@ -117,6 +117,9 @@ for i in range(len(allthexpoints)): #to cover all the points in the array
     alltheXXpoints.pop(indexsaver)
     alltheYYpoints.pop(indexsaver)
     NNplotupdate()
+finalX.append(finalX[0])
+finalY.append(finalY[0])
+NNplotupdate()
 print("NN Produced a path length of {} meters".format(round(pathlength(finalX,finalY),2)))
 
 
