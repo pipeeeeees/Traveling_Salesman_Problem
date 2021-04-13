@@ -137,7 +137,7 @@ finalpercent = round(100*( (pathlength(finalX,finalY)/pathlength(twooptX,twooptY
 print("Using 2-Opt point swapping, our final distance is {}% shorter".format(finalpercent))
 # PLOTTING
 ax.clear()
-ax.plot(finalX,finalY)
+ax.plot(twooptX,twooptY)
 ax.plot(allthexpoints,alltheypoints,'.')
 ax.set_title('Optimized!')
 ax.set_xlabel('X-Axis (meters)')
