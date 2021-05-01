@@ -129,6 +129,8 @@ for i in range(len(twooptX)):
             twooptX[i] = oldX
             twooptY[i] = oldY
             #optdistance = 0
+twooptX.append(twooptX[0])
+twooptY.append(twooptY[0])
 initialdistance = round(pathlength(finalX,finalY) ,2)
 print("Our initial distance was {} meters".format(initialdistance))
 finaldistance = round(pathlength(twooptX,twooptY),2)
