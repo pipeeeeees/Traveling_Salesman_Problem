@@ -1,8 +1,13 @@
+: %matplotlib inline
 import numpy as np
 import math
 import matplotlib.pyplot as plt
 import copy
 import random
+import pandas
+import csv
+import time
+from mpl_toolkits.basemap import Basemap
 
 def distancelength(x1,y1,x2,y2):
     return np.linalg.norm(np.array([x1 - x2, y1 - y2]))
@@ -33,6 +38,7 @@ def pathlength(xpoints,ypoints):
     for i in range(len(xpoints)-1):
         optdistance += distancelength(xpoints[i+1],ypoints[i+1],xpoints[i],ypoints[i])
     return optdistance
+    
 
 class Points:
     """ Points class represents x,y coords """
@@ -50,31 +56,59 @@ class Points:
             ypointz.append(random.randint(-50,50))
         return ypointz
         
-# PLOTTING
-fig = plt.figure()
+
+
+# Parameters
+N = 10              # controls the number of points generated
+
+"""
+# Point generation
+pointzzz = Points(N)
+allthexpoints = pointzzz.Xpoints()
+alltheypoints = pointzzz.Ypoints()
+"""
+
+allthexpoints = []
+alltheypoints = []
+
+with open('us-state-capitals.csv') as csv_file:
+    csv_reader = csv.reader(csv_file, delimiter=',')
+    line_count = 0
+    for row in csv_reader:
+        if line_count == 0:
+            print(f'Column names are {", ".join(row)}')
+            line_count += 1
+        else:
+            print(f'\t{row[0]} \t {row[1]} \t {row[2]}\t{row[3]}')
+            allthexpoints.append(float(row[2]))
+            alltheypoints.append(float(row[3]))
+            line_count += 1
+    print(f'Processed {line_count} lines.')
+    
+# Configuring the plot
+fig = plt.figure(figsize=(8, 8))
+m = Basemap(projection='lcc', resolution=None,
+            width=8E6, height=8E6,
+            lat_0=45, lon_0=-100,)
+m.etopo(scale=0.5, alpha=0.5)
+
+# Map (long, lat) to (x, y) for plotting
+x, y = m(-122.3, 47.6)
+plt.plot(x, y, 'ok', markersize=5)
+plt.text(x, y, ' Seattle', fontsize=12);
+
+
+"""
 ax = fig.add_subplot(111)
 plt.ion()
 fig.show()
 fig.canvas.draw()
 
-# Parameters
-N = 10              # controls the number of points generated
-
-############# Point Spread #############
-pointzzz = Points(N)
-allthexpoints = pointzzz.Xpoints()
-alltheypoints = pointzzz.Ypoints()
-
 ax.clear()
 ax.plot(allthexpoints,alltheypoints,'o')
-
-
-
-
-
-
-############# Nearest Neighbor #############
-# Initializing
+"""
+"""
+# Nearest Neighbor
 print("Starting the nearest neighbor algorithm...")
 finalX = []
 finalY = []
@@ -100,7 +134,9 @@ finalY.append(finalY[0])
 NNplotupdate()
 print("NN Produced a path length of {} meters".format(round(pathlength(finalX,finalY),2)))
 
-"""
+
+
+
 ############# 2-opt #############
 twooptX = copy.copy(finalX)
 twooptY = copy.copy(finalY)
